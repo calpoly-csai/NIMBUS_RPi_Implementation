@@ -1,5 +1,20 @@
+import os
+import json
+
+from Utils.OS_Find import Path_OS_Assist
+
 def load_speech_adaption():
-    with open("speech_adaption_entities.txt", "r") as spch_ents:
+    delim = Path_OS_Assist()
+
+    with open(os.getcwd() + "%sUtils%sPATH.json" % (delim, \
+        delim), "r") as path_json:
+        REPO_PATH = json.load(path_json)["PATH"]
+
+    JSON_PATH = REPO_PATH + "%sData%sWakeWord%sMFCC%s" % \
+            (delim, delim, delim, delim)
+
+    with open(os.getcwd() + "%sUtils%sData%sspeech_adaption_entities.txt" % \
+            (delim, delim, delim), "r") as spch_ents:
         ents = [x.replace('\n', '') for x in spch_ents.readlines()]
     
     new_name = ""
