@@ -16,6 +16,7 @@ import numpy as np
 import os
 import pyaudio
 import subprocess
+import time
 import wave
 
 from google.cloud import speech, speech_v1p1beta1
@@ -23,8 +24,8 @@ from google.cloud.speech import enums
 from google.cloud.speech import types
 from google.cloud import texttospeech
 from speechpy.feature import mfcc
-from time import sleep
 
+#from Utils.LED import LED
 from Utils.WW_Model_Class import Model 
 from Utils.OS_Find import Path_OS_Assist
 
@@ -312,6 +313,14 @@ class NIMBUS_RPi:
 
                 # window the data stream
                 self.frames = self.frames[1:]
+
+    # TODO
+    def Record_Wake_Word(self):
+        pass
+
+    # TODO
+    def Record_Audio_Data(self):
+        pass
 
 if __name__ == "__main__":       
     nimbus = NIMBUS_RPi()
