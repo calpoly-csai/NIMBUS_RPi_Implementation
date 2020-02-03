@@ -262,7 +262,10 @@ class NIMBUS_RPi:
 
                 # if the number of consecutive activations exceeds the activation value
                 if(self.act_count >= self.ACTIVATIONS):
-                    
+        
+                    # Turn on CSAI Color Scheme
+                    # LED.LED_On(Blue)      <=============                 
+
                     # resets the activation count
                     self.act_count = 0
 
@@ -276,6 +279,9 @@ class NIMBUS_RPi:
                     time.sleep(4)
                     print("\nNIMBUS Activated\n\n")
 
+                    # Turn on CSAI Color Scheme
+                    # LED.LED_On(CSAI_Colors)      <=============      
+                    
                     # obtains the string from the audio input
                     stt_result = self.Speech_To_Text()
                     
@@ -320,10 +326,32 @@ class NIMBUS_RPi:
 
     # TODO
     def Record_Audio_Data(self):
-        pass
+        # Recording Countdown
+        
+        # Recording Warning LED 
+        # LED.LED_On(YELLOW) <=====
+        time.sleep(0.5)
+        # LED.LED_Off() <=====
+        time.sleep(0.5)
+
+        # LED.LED_On(YELLOW) <=====
+        time.sleep(0.5)
+        # LED.LED_Off()  <===== 
+        time.sleep(0.5)
+
+        # LED.LED_On(YELLOW) <======
+        time.sleep(0.5)
+        # LED.LED_Off() <========
+        time.sleep(0.5)
+
+        # Recording LED Color
+        # LED.LED_On(RED)  <========
+        # Start Recording
 
 if __name__ == "__main__":       
     nimbus = NIMBUS_RPi()
-
+    # Turn on CSAI Color Scheme
+    # LED.LED_On(CSAI_Colors)      <=============              
+    
     while True:
        nimbus.Wake_Word() 
