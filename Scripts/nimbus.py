@@ -19,13 +19,15 @@ import subprocess
 import time
 import wave
 
+'''
 from google.cloud import speech, speech_v1p1beta1
 from google.cloud.speech import enums
 from google.cloud.speech import types
 from google.cloud import texttospeech
+'''
 from speechpy.feature import mfcc
 
-#from Utils.LED import LED
+from Utils.LED import LED
 from Utils.WW_Model_Class import Model 
 from Utils.OS_Find import Path_OS_Assist
 
@@ -35,6 +37,10 @@ class NIMBUS_RPi:
     
     def __init__(self):
         
+        self.led = LED()
+
+        self.led.recog_flash(0.1, 3, 3)
+
         # obtain OS-specific delimiter
         self.delim = Path_OS_Assist()
         
@@ -47,10 +53,10 @@ class NIMBUS_RPi:
         self.ww_model = Model()
 
         # get path for credentials
-        self.credential_path = "%s%sScripts%sUtils%sData%sauth.json" \
-                            % (self.REPO_PATH, self.delim, 
-                                self.delim, self.delim, self.delim)
-        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = self.credential_path
+#        self.credential_path = "auth.json"#"%s%sScripts%sUtils%sData%sauth.json" \
+                            #% (self.REPO_PATH, self.delim, 
+                            #    self.delim, self.delim, self.delim)
+#        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = self.credential_path
 
         # prediction parameters
         self.CONFIDENCE = 0.6 # prediction confidence 
@@ -78,8 +84,8 @@ class NIMBUS_RPi:
         self.Load_Speech_Adaption()
 
         # instantiate GCP STT & TTS objects
-        self.stt_client = speech.SpeechClient()
-        self.tts_client = texttospeech.TextToSpeechClient()
+ #       self.stt_client = speech.SpeechClient()
+ #       self.tts_client = texttospeech.TextToSpeechClient()
 
         self.file_name = os.path.join(
                 os.path.dirname(__file__),
@@ -87,8 +93,8 @@ class NIMBUS_RPi:
                 'audio.raw')
 
         # load the desired model
-        self.ww_model.load("%s%sScripts%sUtils%sData%smodel.h5" %\
-                (self.REPO_PATH, self.delim, self.delim, self.delim, self.delim))
+        self.ww_model.load("model.h5")#%s%sScripts%sUtils%sData%smodel.h5" %\
+                #(self.REPO_PATH, self.delim, self.delim, self.delim, self.delim))
 
         # print the summary of the model
         print(self.ww_model.model.summary())
@@ -238,7 +244,9 @@ class NIMBUS_RPi:
 
         # reads chunk of audio
         data = self.istream.read(self.CHUNK, exception_on_overflow=False)
-        
+       
+        self.led.nimbus_refresh()
+
         # appends chunk to frame list
         self.frames.append(data)
 
@@ -264,8 +272,8 @@ class NIMBUS_RPi:
                 if(self.act_count >= self.ACTIVATIONS):
         
                     # Turn on CSAI Color Scheme
-                    # LED.LED_On(Blue)      <=============                 
-
+                    self.led.recog_flash(0.1, 3, 2)                 
+                    
                     # resets the activation count
                     self.act_count = 0
 
@@ -276,34 +284,36 @@ class NIMBUS_RPi:
                     # subprocess.Popen(['mpg123', '-q', os.getcwd() + '%sUtils%sData%sNimbus_Awakened.mp3' % (self.delim, self.delim, self.delim)]) 
                     
                     # stalls the program as the audio is played
-                    time.sleep(4)
                     print("\nNIMBUS Activated\n\n")
-
+                    time.sleep(4)
+                    
                     # Turn on CSAI Color Scheme
                     # LED.LED_On(CSAI_Colors)      <=============      
                     
                     # obtains the string from the audio input
-                    stt_result = self.Speech_To_Text()
+                    #stt_result = self.Speech_To_Text()
                     
-                    print(stt_result)
+                    #print(stt_result)
                     
-                    answer = ""
+                    #answer = ""
                     
-                    best_stt_answer = ""
+                    #best_stt_answer = ""
                     
                     # determines the appropriate input for the NLP engine
-                    if list(stt_result) != []:
-                        best_stt_answer = stt_result[0].alternatives[0].transcript
+                    #if list(stt_result) != []:
+                    #    best_stt_answer = stt_result[0].alternatives[0].transcript
               
-                    else:
-                        answer = "Sorry, I could not hear you. Please ask again."
+                    #else:
+                    #    answer = "Sorry, I could not hear you. Please ask again."
 
                     # calls the NLP engine if speech was converted
-                    if best_stt_answer != "":
-                        answer = "Please ask again later." #NLP(best_stt_answer)
+                    #if best_stt_answer != "":
+                    #    answer = "Please ask again later." #NLP(best_stt_answer)
                         
                     # converts the NLP answer to audio
-                    self.Text_To_Speech(answer)
+                    #self.Text_To_Speech(answer)
+
+                    self.led.nimbus_refresh()
 
                     # resets the wake word audio frames
                     self.frames = []
