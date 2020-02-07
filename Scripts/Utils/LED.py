@@ -63,10 +63,7 @@ class LED:
         self.thinking_animation(2, color)
         self.nimbus_cycle(6, color)
 
-def main():
+if __name__ == '__main__':
     led = LED()
     led.nimbus_call(4)
     led.nimbus_refresh()
-
-if __name__ == '__main__':
-    main()
