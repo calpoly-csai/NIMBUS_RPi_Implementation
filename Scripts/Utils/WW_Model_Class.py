@@ -51,7 +51,7 @@ class Model:
         self.GRU_UNITS = 64  # GRU unit size
         self.DROPOUT = 0.3  # dropout size
         self.ACTIVATIONS = 4  # number of activations for confident activation
-        self.EPOCHS = 20  # number of fwd and bckwd props
+        self.EPOCHS = 150  # number of fwd and bckwd props
         self.BATCH_SIZE = 8  # batch size
 
         self.ww_test_data = {}

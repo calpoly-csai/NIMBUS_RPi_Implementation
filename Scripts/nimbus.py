@@ -270,10 +270,10 @@ class NIMBUS_RPi:
 
                 # if the number of consecutive activations exceeds the activation value
                 if(self.act_count >= self.ACTIVATIONS):
-        
+       
                     # Turn on CSAI Color Scheme
-                    self.led.recog_flash(0.1, 3, 2)                 
-                    
+                    self.led.recog_flash(0.001, 1, 2)                 
+
                     # resets the activation count
                     self.act_count = 0
 
@@ -281,8 +281,7 @@ class NIMBUS_RPi:
                     self.istream.stop_stream()
                     
                     # wake word audio prompt
-                    # subprocess.Popen(['mpg123', '-q', os.getcwd() + '%sUtils%sData%sNimbus_Awakened.mp3' % (self.delim, self.delim, self.delim)]) 
-                    
+                    subprocess.Popen(['mpg123', '-q', os.getcwd() + '%sUtils%sData%sNimbus_Awakened.mp3' % (self.delim, self.delim, self.delim)]) 
                     # stalls the program as the audio is played
                     print("\nNIMBUS Activated\n\n")
                     time.sleep(4)
