@@ -19,12 +19,11 @@ import subprocess
 import time
 import wave
 
-'''
 from google.cloud import speech, speech_v1p1beta1
 from google.cloud.speech import enums
 from google.cloud.speech import types
 from google.cloud import texttospeech
-'''
+
 from speechpy.feature import mfcc
 
 from Utils.LED import LED
@@ -53,10 +52,10 @@ class NIMBUS_RPi:
         self.ww_model = Model()
 
         # get path for credentials
-#        self.credential_path = "auth.json"#"%s%sScripts%sUtils%sData%sauth.json" \
-                            #% (self.REPO_PATH, self.delim, 
+        self.credential_path = "auth.json"#"%s%sScripts%sUtils%sData%sauth.json" \
+                           #% (self.REPO_PATH, self.delim, 
                             #    self.delim, self.delim, self.delim)
-#        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = self.credential_path
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = self.credential_path
 
         # prediction parameters
         self.CONFIDENCE = 0.6 # prediction confidence 
@@ -84,8 +83,8 @@ class NIMBUS_RPi:
         self.Load_Speech_Adaption()
 
         # instantiate GCP STT & TTS objects
- #       self.stt_client = speech.SpeechClient()
- #       self.tts_client = texttospeech.TextToSpeechClient()
+        self.stt_client = speech.SpeechClient()
+        self.tts_client = texttospeech.TextToSpeechClient()
 
         self.file_name = os.path.join(
                 os.path.dirname(__file__),
@@ -228,6 +227,7 @@ class NIMBUS_RPi:
         # voice parameters and audio file type
         response = self.tts_client.synthesize_speech(synthesis_input, voice, audio_config)
 
+        self.led.recog_flash(0.001, 1, 0)                 
         # The response's audio_content is binary.
         print(answer)
         self.ostream.write(response.audio_content)
@@ -287,30 +287,30 @@ class NIMBUS_RPi:
                     time.sleep(4)
                     
                     # Turn on CSAI Color Scheme
-                    # LED.LED_On(CSAI_Colors)      <=============      
+                    self.led.recog_flash(0.001, 1, 3)                 
                     
                     # obtains the string from the audio input
-                    #stt_result = self.Speech_To_Text()
+                    stt_result = self.Speech_To_Text()
                     
-                    #print(stt_result)
+                    print(stt_result)
                     
-                    #answer = ""
+                    answer = ""
                     
-                    #best_stt_answer = ""
+                    best_stt_answer = ""
                     
                     # determines the appropriate input for the NLP engine
-                    #if list(stt_result) != []:
-                    #    best_stt_answer = stt_result[0].alternatives[0].transcript
+                    if list(stt_result) != []:
+                        best_stt_answer = stt_result[0].alternatives[0].transcript
               
                     #else:
-                    #    answer = "Sorry, I could not hear you. Please ask again."
+                        answer = "Sorry, I could not hear you. Please ask again."
 
                     # calls the NLP engine if speech was converted
-                    #if best_stt_answer != "":
-                    #    answer = "Please ask again later." #NLP(best_stt_answer)
-                        
+                    if best_stt_answer != "":
+                        answer = "Please ask again later." #NLP(best_stt_answer)
+                     
                     # converts the NLP answer to audio
-                    #self.Text_To_Speech(answer)
+                    self.Text_To_Speech(answer)
 
                     self.led.nimbus_refresh()
 
